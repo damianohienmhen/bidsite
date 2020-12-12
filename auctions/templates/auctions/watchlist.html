@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h3>Your Personalised Watchlist</h3>
+
+{% for item in watchlistings %}
+<ul>
+<a href="{% url 'listing' item.watchlist_item.listname %}">
+    <li>{{ item.watchlist_item }} </li>
+</a>
+</ul>
+{% empty %}
+No Items Added Yet!!
+{% endfor %}
+
+
+{% endblock %}

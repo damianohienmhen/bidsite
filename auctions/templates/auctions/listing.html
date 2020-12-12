@@ -1,0 +1,54 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<a href="{% url 'addwatchlist' listing.listname %}" class="btn btn-primary">Add to Watchlist</a>
+{% if message %}
+        {{ message }}
+    {% endif %}
+<h2>Listing: {{ listing.listname }}</h2>
+
+    
+        <td><img src="{{ listing.image.url }}" width="280" height= "280"></td>
+        <h5>{{ listing.description }}</h5>
+        <h4>${{ bid.bid_amount }}.00</h4>
+        
+<form action="{% url 'bid' listing.listname %}" method="post">
+        {% csrf_token %}
+        {% if bidmessage %}
+            {{ bidmessage }}
+        {% endif %}
+        <div class="form-group">
+            <input autofocus class="form-control" type="text" name="bid" placeholder="Bid">
+            <input class="btn btn-primary" type="submit" value="Place Bid">
+        </div>
+</form>
+        {% if user == bid.bidder %}
+        <a href="{% url 'closebid' listing.listname %}" class="btn btn-primary">Close Bid</a>
+        {% endif %}
+<h3>Details</h3>
+    <ul>
+        <li>Listed by: {{ bid.bidder }}</li>
+        <li>Category: {{ listing.get_category_display }}</li>
+        <li>Highest Bidder So Far: {{ listing.winner }}</li>
+    </ul>
+    
+<h3>Comments</h3>
+
+{% for comm in comment %}
+   
+        <li>User {{ comm.user }} says: {{ comm.new_comment}}</li>
+{% empty%}
+    No Comments Yet
+{% endfor %}
+
+
+<h3>Leave a comment</h3>
+  <form action = "{% url 'create_comment' listing.listname %}" method="post"> 
+      {{ comment_form.as_p }} 
+      {% csrf_token %} 
+      <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
+  </form> 
+       
+
+{% endblock %}
